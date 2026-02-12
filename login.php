@@ -1,0 +1,27 @@
+<?php
+header('Content-Type: application/json');
+include "config.php";
+
+$email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
+
+if(empty($email) || empty($password)){
+    echo json_encode(["status"=>"error","message"=>"Missing fields"]);
+    exit;
+}
+
+$stmt = mysqli_prepare($conn, "SELECT id,password FROM users WHERE email=?");
+mysqli_stmt_bind_param($stmt, "s", $email);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+if($row = mysqli_fetch_assoc($result)){
+    if(password_verify($password, $row['password'])){
+        echo json_encode(["status"=>"success"]);
+    } else {
+        echo json_encode(["status"=>"error","message"=>"Invalid password"]);
+    }
+} else {
+    echo json_encode(["status"=>"error","message"=>"User not found"]);
+}
+?>
