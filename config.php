@@ -1,13 +1,13 @@
 <?php
-$conn = mysqli_connect(
-    getenv("DB_HOST"),
-    getenv("DB_USER"),
-    getenv("DB_PASS"),
-    getenv("DB_NAME"),
-    getenv("DB_PORT")
+$conn = pg_connect(
+    "host=" . getenv("DB_HOST") .
+    " port=" . getenv("DB_PORT") .
+    " dbname=" . getenv("DB_NAME") .
+    " user=" . getenv("DB_USER") .
+    " password=" . getenv("DB_PASS")
 );
 
 if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+    die("Database connection failed.");
 }
 ?>
